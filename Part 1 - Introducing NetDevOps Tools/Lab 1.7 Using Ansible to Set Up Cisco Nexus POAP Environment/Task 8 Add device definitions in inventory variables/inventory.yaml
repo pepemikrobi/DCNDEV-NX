@@ -1,0 +1,54 @@
+all:
+  hosts:
+    podX-mgmt.sdn.lab: 
+
+  vars:
+    pod_no: X
+
+    common:
+      transfer_hostname: "10.11.1.1{{ '%02d' % pod_no | int }}" 
+  
+    dhcp_hosts:
+      # PODX DC1
+      - hostname: POD{{ pod_no }}_LEAF11 
+        mac_address: "02:ca:fe:0{{ pod_no | int }}:11:09"
+        fixed_address: "10.11.10{{ pod_no | int }}.111"
+        gateway: "10.11.10{{ pod_no | int }}.254"
+        password: 'Admin{{ pod_no }}sisko$'
+      - hostname: POD{{ pod_no }}_LEAF12 
+        mac_address: "02:ca:fe:0{{ pod_no | int }}:12:09"
+        fixed_address: "10.11.10{{ pod_no | int }}.112"
+        gateway: "10.11.10{{ pod_no | int }}.254"
+        password: 'Admin{{ pod_no }}sisko$'
+      - hostname: POD{{ pod_no }}_SPINE11 
+        mac_address: "02:ca:fe:0{{ pod_no | int }}:13:09"
+        fixed_address: "10.11.10{{ pod_no | int }}.113"
+        gateway: "10.11.10{{ pod_no | int }}.254"
+        password: 'Admin{{ pod_no }}sisko$'
+      - hostname: POD{{ pod_no }}_SPINE12 
+        mac_address: "02:ca:fe:0{{ pod_no | int }}:14:09"
+        fixed_address: "10.11.10{{ pod_no | int }}.114"
+        gateway: "10.11.10{{ pod_no | int }}.254"
+        password: 'Admin{{ pod_no }}sisko$'
+          
+      # PODX DC2
+      - hostname: POD{{ pod_no }}_LEAF21 
+        mac_address: "02:ca:fe:0{{ pod_no | int }}:21:09"
+        fixed_address: "10.11.20{{ pod_no | int }}.221"
+        gateway: "10.11.20{{ pod_no | int }}.254"
+        password: 'Admin{{ pod_no }}sisko$'
+      - hostname: POD{{ pod_no }}_LEAF22 
+        mac_address: "02:ca:fe:0{{ pod_no | int }}:22:09"
+        fixed_address: "10.11.20{{ pod_no | int }}.222"
+        gateway: "10.11.20{{ pod_no | int }}.254"
+        password: 'Admin{{ pod_no }}sisko$'
+      - hostname: POD{{ pod_no }}_SPINE21 
+        mac_address: "02:ca:fe:0{{ pod_no | int }}:23:09"
+        fixed_address: "10.11.20{{ pod_no | int }}.223"
+        gateway: "10.11.20{{ pod_no | int }}.254"
+        password: 'Admin{{ pod_no }}sisko$'
+      - hostname: POD{{ pod_no }}_SPINE22 
+        mac_address: "02:ca:fe:0{{ pod_no | int }}:24:09"
+        fixed_address: "10.11.20{{ pod_no | int }}.224"
+        gateway: "10.11.20{{ pod_no | int }}.254"
+        password: 'Admin{{ pod_no }}sisko$'
