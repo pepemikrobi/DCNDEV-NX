@@ -1,41 +1,57 @@
 devices:
 
-    PODX_SW3:
-        alias: "sw3"
+    PODX_LEAF11:
+        alias: "leaf11"
         type: "switch"
-        os: "iosxe"
-        platform: "cat9k"
+        os: "nxos"
+        platform: "nxosv"
         credentials:
             default:
-                username: "cliadmin"
+                username: "admin"
                 password: "AdminXsisko$"
         connections:
             cli:
                 protocol: "ssh"
-                ip: "10.1X.127.3"
+                ip: "10.11.10X.111"
 
-    PODX_R1:
-        alias: "r1"
-        type: "router"
-        os: "iosxe"
+    PODX_LEAF12:
+        alias: "leaf12"
+        type: "switch"
+        os: "nxos"
+        platform: "nxosv"
         credentials:
             default:
-                username: "cliadmin"
+                username: "admin"
                 password: "AdminXsisko$"
         connections:
             cli:
                 protocol: "ssh"
-                ip: "10.1X.127.101"
+                ip: "10.11.10X.112"
 
-    PODX_R2:
-        alias: "r2"
-        type: "router"
-        os: "iosxe"
+    PODX_SPINE11:
+        alias: "spine11"
+        type: "switch"
+        os: "nxos"
+        platform: "nxosv"
         credentials:
             default:
-                username: "cliadmin"
+                username: "admin"
                 password: "AdminXsisko$"
         connections:
             cli:
                 protocol: "ssh"
-                ip: "10.1X.127.102"
+                ip: "10.11.10X.113"
+                
+    PODX_SPINE12:
+        alias: "spine12"
+        type: "switch"
+        os: "nxos"
+        platform: "nxosv"
+        credentials:
+            default:
+                username: "admin"
+                password: "AdminXsisko$"
+        connections:
+            cli:
+                protocol: "ssh"
+                ip: "10.11.10X.114"
