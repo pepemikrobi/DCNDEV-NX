@@ -38,11 +38,11 @@ resource "vsphere_host_port_group" "srv12" {
 
 resource "vsphere_host_port_group" "srv1" {
 
-    name                = format("(1%s01) SDN_POD%s_SRV1", var.pod, var.pod)
+    name                = format("(1%s31) POD%s_SRV1_LEAF11", var.pod, var.pod)
     host_system_id      = data.vsphere_host.esxi_host.id
     virtual_switch_name = "vSwitch0"
 
-    vlan_id = format("1%s01", var.pod)
+    vlan_id = format("1%s31", var.pod)
     allow_promiscuous = true
     allow_forged_transmits = true
     allow_mac_changes = true
@@ -50,11 +50,11 @@ resource "vsphere_host_port_group" "srv1" {
 
 resource "vsphere_host_port_group" "srv2" {
 
-    name                = format("(1%s02) SDN_POD%s_SRV2", var.pod, var.pod)
+    name                = format("(1%s32) POD%s_SRV2_LEAF12", var.pod, var.pod)
     host_system_id      = data.vsphere_host.esxi_host.id
     virtual_switch_name = "vSwitch0"
 
-    vlan_id = format("1%s02", var.pod)
+    vlan_id = format("1%s32", var.pod)
     allow_promiscuous = true
     allow_forged_transmits = true
     allow_mac_changes = true
@@ -62,11 +62,11 @@ resource "vsphere_host_port_group" "srv2" {
 
 resource "vsphere_host_port_group" "srv3" {
 
-    name                = format("(1%s03) SDN_POD%s_SRV3", var.pod, var.pod)
+    name                = format("(1%s41) POD%s_SRV3_LEAF21", var.pod, var.pod)
     host_system_id      = data.vsphere_host.esxi_host.id
     virtual_switch_name = "vSwitch0"
 
-    vlan_id = format("1%s03", var.pod)
+    vlan_id = format("1%s41", var.pod)
     allow_promiscuous = true
     allow_forged_transmits = true
     allow_mac_changes = true
@@ -74,11 +74,11 @@ resource "vsphere_host_port_group" "srv3" {
 
 resource "vsphere_host_port_group" "srv4" {
 
-    name                = format("(1%s04) SDN_POD%s_SRV4", var.pod, var.pod)
+    name                = format("(1%s42) POD%s_SRV4_LEAF22", var.pod, var.pod)
     host_system_id      = data.vsphere_host.esxi_host.id
     virtual_switch_name = "vSwitch0"
 
-    vlan_id = format("1%s04", var.pod)
+    vlan_id = format("1%s42", var.pod)
     allow_promiscuous = true
     allow_forged_transmits = true
     allow_mac_changes = true
@@ -102,21 +102,21 @@ data "vsphere_network" "srv12" {
 
 # SRV1-4
 data "vsphere_network" "srv1" {
-    name          = format("(1%s01) SDN_POD%s_SRV1", var.pod, var.pod)
+    name          = format("(2%s31) POD%s_SRV1_LEAF11", var.pod, var.pod)
     datacenter_id = data.vsphere_datacenter.datacenter.id
 }
 
 data "vsphere_network" "srv2" {
-    name          = format("(1%s02) SDN_POD%s_SRV2", var.pod, var.pod)
+    name          = format("(2%s32) POD%s_SRV2_LEAF12", var.pod, var.pod)
     datacenter_id = data.vsphere_datacenter.datacenter.id
 }
 
 data "vsphere_network" "srv3" {
-    name          = format("(1%s03) SDN_POD%s_SRV3", var.pod, var.pod)
+    name          = format("(2%s41) POD%s_SRV3_LEAF21", var.pod, var.pod)
     datacenter_id = data.vsphere_datacenter.datacenter.id
 }
 
 data "vsphere_network" "srv4" {
-    name          = format("(1%s04) SDN_POD%s_SRV4", var.pod, var.pod)
+    name          = format("(2%s42) POD%s_SRV4_LEAF22", var.pod, var.pod)
     datacenter_id = data.vsphere_datacenter.datacenter.id
 }
