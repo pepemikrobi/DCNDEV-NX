@@ -1,0 +1,32 @@
+---
+# tasks file for roles/create_fabrics
+  - name: Create NDFC fabrics
+    cisco.dcnm.dcnm_fabric:
+      state: merged
+      config:
+        "{{ fabrics | json_query('*.parameters') | list }}"
+
+  - name: Create a fabric names list
+    set_fact:
+      fabric_name_list: "{{ fabric_name_list | default([]) + [{'FABRIC_NAME' : item} ]}}"
+    loop: "{{ fabrics.keys() }}"
+
+  - name: Get active fabrics
+    cisco.dcnm.dcnm_fabric:
+      state: query
+      config:
+        "{{ fabric_name_list }}"
+    register: fabric_list
+
+  - name: Print active fabrics data
+    debug:
+      msg: |
+        Fabric name: {{ item.fabricName }}, ASN: {{ item.asn }},
+        Replication: {{ item.nvPairs.REPLICATION_MODE }},
+        Underlay protocol: {{ item.nvPairs.LINK_STATE_ROUTING }},
+        Lo0 range: {{ item.nvPairs.LOOPBACK0_IP_RANGE }},
+        Lo1 range: {{ item.nvPairs.LOOPBACK1_IP_RANGE }},
+        Underlay range: {{ item.nvPairs.SUBNET_RANGE }}
+    with_items: "{{ fabric_list.response[0].DATA }}"
+    loop_control:
+      label: "Item"

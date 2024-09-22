@@ -1,0 +1,11 @@
+fabrics:
+  DC1:
+    parameters:
+      FABRIC_NAME: DC1
+      FABRIC_TYPE: VXLAN_EVPN
+      BGP_AS: 65501
+  DC2:
+    parameters:
+      FABRIC_NAME: DC2
+      FABRIC_TYPE: VXLAN_EVPN
+      BGP_AS: 65502

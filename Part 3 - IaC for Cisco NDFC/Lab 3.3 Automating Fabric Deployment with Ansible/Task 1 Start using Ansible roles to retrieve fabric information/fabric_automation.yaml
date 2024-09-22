@@ -1,0 +1,6 @@
+- name: Managing NDFC fabrics
+  hosts: podX-ndfc.sdn.lab
+  gather_facts: False
+
+  roles:
+    - create_fabrics
