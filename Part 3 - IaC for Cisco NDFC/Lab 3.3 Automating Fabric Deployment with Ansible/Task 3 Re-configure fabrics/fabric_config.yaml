@@ -13,6 +13,11 @@ fabrics:
       STATIC_UNDERLAY_IP_ALLOC: False
       ENABLE_SGT: False
       ENABLE_PVLAN: False
+      BOOTSTRAP_ENABLE: True
+      DHCP_ENABLE: True
+      DHCP_START: "10.11.10{{ pod }}.200"
+      DHCP_END: "10.11.10{{ pod }}.219"
+      MGMT_GW: "10.11.10{{ pod }}.254"      
   DC2:
     parameters:
       FABRIC_NAME: DC2
@@ -27,3 +32,8 @@ fabrics:
       STATIC_UNDERLAY_IP_ALLOC: False
       ENABLE_SGT: False
       ENABLE_PVLAN: False
+      BOOTSTRAP_ENABLE: True
+      DHCP_ENABLE: True     
+      DHCP_START: "10.11.20{{ pod }}.200"
+      DHCP_END: "10.11.20{{ pod }}.219"
+      MGMT_GW: "10.11.20{{ pod }}.254"
