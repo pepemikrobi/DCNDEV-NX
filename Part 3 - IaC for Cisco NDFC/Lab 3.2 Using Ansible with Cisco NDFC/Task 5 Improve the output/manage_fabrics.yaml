@@ -1,0 +1,52 @@
+---
+- name: Manage NDFC fabrics
+  hosts: podX-ndfc.sdn.lab
+  gather_facts: False
+  tasks:
+    - name: REST GET fabrics
+      cisco.dcnm.dcnm_rest:
+        method: GET
+        path: "/appcenter/cisco/ndfc/api/v1/lan-fabric/rest/control/fabrics"
+      register: rest_fabric_list
+
+    - name: Process fabric data
+      set_fact:
+        active_fabrics: "{{ rest_fabric_list.response.DATA | json_query(mq1) | to_json }}"
+      vars:
+        mq1: "[*].{FabricName: fabricName}"
+
+    - name: Print active fabrics
+      debug:
+        var: active_fabrics
+
+    - name: Create NDFC fabrics
+      cisco.dcnm.dcnm_fabric:
+        state: merged
+        config:
+        - FABRIC_NAME: DC1
+          FABRIC_TYPE: VXLAN_EVPN
+          BGP_AS: 65501
+        - FABRIC_NAME: DC2
+          FABRIC_TYPE: VXLAN_EVPN
+          BGP_AS: 65502
+          
+    - name: Get active fabrics
+      cisco.dcnm.dcnm_fabric:
+        state: query
+        config:
+        - FABRIC_NAME: DC1
+        - FABRIC_NAME: DC2
+      register: fabric_list
+
+    - name: Print active fabrics data
+      debug:
+        # var: fabric_list
+        msg: "Fabric name: {{ item.fabricName }}, ASN: {{ item.asn }}, 
+        Replication: {{ item.nvPairs.REPLICATION_MODE }}, 
+        Underlay protocol: {{ item.nvPairs.LINK_STATE_ROUTING }}, 
+        Lo0 range: {{ item.nvPairs.LOOPBACK0_IP_RANGE }}, 
+        Lo1 range: {{ item.nvPairs.LOOPBACK1_IP_RANGE }}, 
+        Underlay range: {{ item.nvPairs.SUBNET_RANGE }}"
+      with_items: "{{ fabric_list.response[0].DATA }}"
+      loop_control:
+        label: "Item"
