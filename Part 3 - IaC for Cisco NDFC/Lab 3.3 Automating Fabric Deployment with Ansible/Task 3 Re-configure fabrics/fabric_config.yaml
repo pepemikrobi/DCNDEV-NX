@@ -1,0 +1,29 @@
+fabrics:
+  DC1:
+    parameters:
+      FABRIC_NAME: DC1
+      FABRIC_TYPE: VXLAN_EVPN
+      BGP_AS: 65501
+      REPLICATION_MODE: Ingress
+      LINK_STATE_ROUTING: is-is
+      LOOPBACK0_IP_RANGE: "10.251.0.0/24"
+      LOOPBACK1_IP_RANGE: "10.251.1.0/24"
+      SUBNET_RANGE: "10.251.128.0/17"
+      UNDERLAY_IS_V6: False
+      STATIC_UNDERLAY_IP_ALLOC: False
+      ENABLE_SGT: False
+      ENABLE_PVLAN: False
+  DC2:
+    parameters:
+      FABRIC_NAME: DC2
+      FABRIC_TYPE: VXLAN_EVPN
+      BGP_AS: 65502
+      REPLICATION_MODE: Ingress
+      LINK_STATE_ROUTING: is-is
+      LOOPBACK0_IP_RANGE: "10.252.0.0/24"
+      LOOPBACK1_IP_RANGE: "10.252.1.0/24"
+      SUBNET_RANGE: "10.252.128.0/17"
+      UNDERLAY_IS_V6: False
+      STATIC_UNDERLAY_IP_ALLOC: False
+      ENABLE_SGT: False
+      ENABLE_PVLAN: False
