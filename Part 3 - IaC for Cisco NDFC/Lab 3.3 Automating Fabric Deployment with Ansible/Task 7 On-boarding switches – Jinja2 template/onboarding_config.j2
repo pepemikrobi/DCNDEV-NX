@@ -1,0 +1,9 @@
+{% for switch in inventory_config[fabric_index].keys() %}
+- seed_ip: {{ inventory_config[fabric_index][switch].seed_ip }}
+  auth_proto: {{ inventory_common_config[0].auth_proto }}
+  user_name: {{ inventory_common_config[0].user_name }}
+  password: {{ inventory_common_config[0].password }}
+  max_hops: {{ inventory_common_config[0].max_hops }}
+  role: {{ inventory_config[fabric_index][switch].role }}
+  preserve_config: {{ inventory_common_config[0].preserve_config }}
+{% endfor %}

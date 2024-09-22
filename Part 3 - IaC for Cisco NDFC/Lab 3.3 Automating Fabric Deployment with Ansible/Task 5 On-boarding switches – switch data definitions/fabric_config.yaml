@@ -1,0 +1,82 @@
+fabrics:
+  DC1:
+    parameters:
+      FABRIC_NAME: DC1
+      FABRIC_TYPE: VXLAN_EVPN
+      BGP_AS: 65501
+      REPLICATION_MODE: Ingress
+      LINK_STATE_ROUTING: is-is
+      LOOPBACK0_IP_RANGE: "10.251.0.0/24"
+      LOOPBACK1_IP_RANGE: "10.251.1.0/24"
+      SUBNET_RANGE: "10.251.128.0/17"
+      UNDERLAY_IS_V6: False
+      STATIC_UNDERLAY_IP_ALLOC: False
+      ENABLE_SGT: False
+      ENABLE_PVLAN: False
+      BOOTSTRAP_ENABLE: True
+      DHCP_ENABLE: True
+      DHCP_START: "10.11.10{{ pod }}.200"
+      DHCP_END: "10.11.10{{ pod }}.219"
+      MGMT_GW: "10.11.10{{ pod }}.254"
+
+    inventory_common:
+      auth_proto: MD5
+      user_name: admin
+      password: "Admin{{ pod }}sisko$"
+      max_hops: 0
+      preserve_config: False  
+      
+    inventory:
+      LEAF11:
+        seed_ip: "10.11.10{{ pod }}.111"
+        role: leaf
+      LEAF12:
+        seed_ip: "10.11.10{{ pod }}.112"
+        role: leaf
+      SPINE11:
+        seed_ip: "10.11.10{{ pod }}.113"
+        role: border_spine                
+      SPINE12:
+        seed_ip: "10.11.10{{ pod }}.114"
+        role: border_spine  
+
+  DC2:
+    parameters:
+      FABRIC_NAME: DC2
+      FABRIC_TYPE: VXLAN_EVPN
+      BGP_AS: 65502
+      REPLICATION_MODE: Ingress
+      LINK_STATE_ROUTING: is-is
+      LOOPBACK0_IP_RANGE: "10.252.0.0/24"
+      LOOPBACK1_IP_RANGE: "10.252.1.0/24"
+      SUBNET_RANGE: "10.252.128.0/17"
+      UNDERLAY_IS_V6: False
+      STATIC_UNDERLAY_IP_ALLOC: False
+      ENABLE_SGT: False
+      ENABLE_PVLAN: False
+      BOOTSTRAP_ENABLE: True
+      DHCP_ENABLE: True     
+      DHCP_START: "10.11.20{{ pod }}.200"
+      DHCP_END: "10.11.20{{ pod }}.219"
+      MGMT_GW: "10.11.20{{ pod }}.254"
+
+    inventory_common:
+      auth_proto: MD5
+      user_name: admin
+      password: "Admin{{ pod }}sisko$"
+      max_hops: 0
+      preserve_config: False  
+
+    inventory:
+      LEAF21:
+        seed_ip: "10.11.20{{ pod }}.221"
+        role: leaf
+      LEAF22:
+        seed_ip: "10.11.20{{ pod }}.222"
+        role: leaf
+      SPINE21:
+        seed_ip: "10.11.20{{ pod }}.223"
+        role: border_spine                
+      SPINE22:
+        seed_ip: "10.11.20{{ pod }}.224"
+        role: border_spine  

@@ -1,0 +1,49 @@
+---
+# tasks file for roles/onboard_switches
+- name: Retrieve switch specific config from fabrics data
+  set_fact:
+    inventory_config: "{{ fabrics | json_query('*.inventory') | list }}"
+  loop: "{{ fabrics.keys() }}"
+
+- name: Retrieve switch common config from fabrics data
+  set_fact:
+    inventory_common_config: "{{ fabrics | json_query('*.inventory_common') | list }}"
+  loop: "{{ fabrics.keys() }}"
+
+- name: Create per DC config files from template
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/onboarding_config.j2"
+    dest: "{{ role_path }}/files/{{ fabric_name }}_onboarding_config.json"
+    force: True
+  loop: "{{ fabrics.keys() }}"
+  loop_control:
+    loop_var: fabric_name
+    index_var: fabric_index
+    label: "Creating {{ fabric_name }}_onboarding_config.json file"
+
+- name: Create per DC config variables from files
+  set_fact:
+    "{{fabric_name}}_inventory_config": "{{ lookup('file', '{{ role_path }}/files/{{ fabric_name }}_onboarding_config.json') | from_yaml}}"
+  loop: "{{ fabrics.keys() }}"
+  loop_control:
+    loop_var: fabric_name
+    label: "Creating {{ fabric_name }}_inventory_config variable"
+
+- name: Display per DC fabric config variables
+  debug:
+    var: "{{fabric_name}}_inventory_config"
+  loop: "{{ fabrics.keys() }}"
+  loop_control:
+    loop_var: fabric_name
+    label: "Displaying {{ fabric_name }}_inventory_config variable"
+
+- name: Onboard switches
+  cisco.dcnm.dcnm_inventory:
+    fabric: "{{ fabric_name }}"
+    state: merged
+    config:
+      "{{ lookup('vars', '{{ fabric_name }}' + '_inventory_config') }}"
+  loop: "{{ fabrics.keys() }}"
+  loop_control:
+    loop_var: fabric_name
+    label: "Onboarding switches in {{ fabric_name }} fabric"
