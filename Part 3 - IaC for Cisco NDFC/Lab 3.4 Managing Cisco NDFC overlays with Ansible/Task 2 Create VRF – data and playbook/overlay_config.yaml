@@ -1,0 +1,26 @@
+overlays:
+  DC1:
+    vrfs:
+      VRF11:
+        vrf_name: VRF11
+        vrf_id: 50011
+        attach:
+          - LEAF11
+          - LEAF12
+      VRF12:
+        vrf_name: VRF12
+        attach:
+          - LEAF11          
+  DC2: 
+    vrfs:
+      VRF21:
+        vrf_name: VRF21
+        vrf_id: 50021
+        attach:
+          - LEAF21
+          - LEAF22
+      VRF22:
+        vrf_name: VRF22
+        vrf_id: 50022
+        attach:
+          - LEAF21

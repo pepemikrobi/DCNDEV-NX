@@ -1,0 +1,42 @@
+- name: Retrieve all VRF configs from overlays data structure
+  set_fact:
+    vrf_config: "{{ overlays | json_query ('*.vrfs') | list }}"
+  loop: "{{ overlays.keys() }}"
+
+- name: Create per DC VRF config files from template
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/vrf_config.j2"
+    dest: "{{ role_path }}/files/{{ fabric_name }}_vrf_config.yaml"
+    force: True
+  loop: "{{ overlays.keys() }}"
+  loop_control:
+    loop_var: fabric_name
+    index_var: fabric_index
+    label: "Creating {{ fabric_name }}_vrf_config.yaml file"
+
+- name: Create per DC config variables from files
+  set_fact:
+    "{{fabric_name}}_vrf_config": "{{ lookup('file', '{{ role_path }}/files/{{ fabric_name }}_vrf_config.yaml') | from_yaml }}"
+  loop: "{{ overlays.keys() }}"
+  loop_control:
+    loop_var: fabric_name
+    label: "Creating {{ fabric_name }}_vrf_config variable"
+
+- name: display overlay config
+  debug:
+    var: "{{fabric_name}}_vrf_config"
+  loop: "{{ overlays.keys() }}"
+  loop_control:
+    loop_var: fabric_name
+    label: "Displaying {{ fabric_name }}_vrf_config variable"
+
+- name: Create VRFs
+  cisco.dcnm.dcnm_vrf:
+    state: overridden
+    fabric: "{{ fabric_name }}"
+    config:
+      "{{ lookup('vars', '{{ fabric_name }}' + '_vrf_config') }}"
+  loop: "{{ overlays.keys() }}"
+  loop_control:
+    loop_var: fabric_name
+    label: "Creating VRFs in {{ fabric_name }} fabric"
