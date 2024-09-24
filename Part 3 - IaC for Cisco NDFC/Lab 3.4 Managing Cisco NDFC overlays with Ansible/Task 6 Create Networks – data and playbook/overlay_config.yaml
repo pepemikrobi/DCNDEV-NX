@@ -1,0 +1,77 @@
+overlays:
+  DC1:
+    vrfs:
+      VRF11:
+        vrf_name: VRF11
+        vrf_id: 50011
+        attach:
+          - LEAF11
+          - LEAF12
+      VRF12:
+        vrf_name: VRF12
+        attach:
+          - LEAF11
+
+    networks:
+      NET11:
+        network_name: NET11
+        network_id: 30011
+        vrf_name: VRF11
+        gw_ip_subnet: "10.1{{ pod }}.191.254/24"
+        deploy: False
+        attach:
+          - switch: LEAF11
+            ports: 
+            - Ethernet1/3          
+          - switch: LEAF12
+            ports: 
+            - Ethernet1/3          
+      NET12:
+        network_name: NET12
+        network_id: 30012
+        is_l2only: True
+        deploy: False
+        attach:
+          - switch: LEAF11
+            ports: 
+            - none    
+
+  DC2: 
+    vrfs:
+      VRF21:
+        vrf_name: VRF21
+        vrf_id: 50021
+        attach:
+          - LEAF21
+          - LEAF22
+      VRF22:
+        vrf_name: VRF22
+        vrf_id: 50022
+        attach:
+          - LEAF21
+
+    networks:
+      NET21:
+        network_name: NET21
+        network_id: 30021
+        vrf_name: VRF21
+        gw_ip_subnet: "10.1{{ pod }}.191.254/24"        
+        deploy: False
+        attach:
+          - switch: LEAF21
+            ports: 
+            - Ethernet1/3
+            - Ethernet1/4         
+          - switch: LEAF22
+            ports: 
+            - Ethernet1/3
+            - Ethernet1/4
+      NET22:
+        network_name: NET22
+        network_id: 30022
+        is_l2only: True
+        deploy: False
+        attach:
+          - switch: LEAF21
+            ports: 
+            - none
