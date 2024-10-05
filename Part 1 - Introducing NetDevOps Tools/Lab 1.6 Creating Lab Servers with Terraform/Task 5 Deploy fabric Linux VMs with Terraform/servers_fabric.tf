@@ -4,7 +4,7 @@ data "vsphere_virtual_machine" "server_fabric_template" {
 }
 
 locals {
-    fabric_interface = { 
+    fabric_interface_srv_fabric = { 
         srv1 = data.vsphere_network.srv1
         srv2 = data.vsphere_network.srv2
         srv3 = data.vsphere_network.srv3
@@ -64,7 +64,7 @@ resource "vsphere_virtual_machine" "server_fabric" {
 
     # ens224
     network_interface {
-        network_id   = local.fabric_interface[each.value["ens224"]].id
+        network_id   = local.fabric_interface_srv_fabric[each.value["ens224"]].id
         adapter_type = data.vsphere_virtual_machine.server_fabric_template.network_interface_types[0]
         use_static_mac = true
         mac_address  = format("02:fa:b0:0%s:%02s:00", var.pod, each.value["index"])
