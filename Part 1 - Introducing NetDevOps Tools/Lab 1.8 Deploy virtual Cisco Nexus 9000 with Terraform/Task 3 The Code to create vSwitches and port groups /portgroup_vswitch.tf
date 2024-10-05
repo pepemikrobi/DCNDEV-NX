@@ -31,3 +31,15 @@ resource "vsphere_host_port_group" "pod_portgroups" {
     vsphere_host_virtual_switch.pod_vswitches
     ]
 }
+
+resource "vsphere_host_port_group" "DC2_oob_mgmt" {
+
+    name                = format("(120%s) SDN_POD%s_DC2", var.pod, var.pod)
+    host_system_id      = data.vsphere_host.esxi_host.id
+    virtual_switch_name = "vSwitch0"
+
+    vlan_id = format("120%s", var.pod)
+    allow_promiscuous = true
+    allow_forged_transmits = true
+    allow_mac_changes = true
+}

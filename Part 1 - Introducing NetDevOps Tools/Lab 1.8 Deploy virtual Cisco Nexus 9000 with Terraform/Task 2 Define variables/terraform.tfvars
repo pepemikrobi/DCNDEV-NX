@@ -86,9 +86,7 @@ dc2_switch_data = {
 }
 
 portgroup_data = {
-    # DC2 OOB MGMT
-    "120X" = "SDN_PODX_DC2"
-    
+  
     # DC1
     "2X11" = "PODX_SPINE11_LEAF11"
     "2X12" = "PODX_SPINE11_LEAF12"
