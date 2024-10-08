@@ -1,0 +1,32 @@
+variables:
+  IMAGE_NAME_NDFC_ANSIBLE: $CI_REGISTRY_IMAGE/ndfc_ansible
+  IMAGE_NAME_NDFC_TF: $CI_REGISTRY_IMAGE/ndfc_terraform
+  IMAGE_TAG_NDFC_ANSIBLE: "1.0"
+  IMAGE_TAG_NDFC_TF: "1.0"  
+
+stages:
+  - build
+
+build_image:
+  stage: build
+  tags:
+    - shell
+  script:
+    - echo $CI_COMMIT_BRANCH
+    - echo $CI_REGISTRY_IMAGE
+    - echo $IMAGE_NAME_NDFC_ANSIBLE
+    - docker build -t $IMAGE_NAME_NDFC_ANSIBLE:$IMAGE_TAG_NDFC_ANSIBLE Docker/NDFC_Ansible/.
+    - echo $IMAGE_NAME_NDFC_TF
+    - docker build -t $IMAGE_NAME_NDFC_TF:$IMAGE_TAG_NDFC_TF Docker/NDFC_TF/.
+
+push_image:
+  stage: build
+  needs:
+    - build_image
+  tags:
+    - shell
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker push $IMAGE_NAME_NDFC_ANSIBLE:$IMAGE_TAG_NDFC_ANSIBLE
+    - docker push $IMAGE_NAME_NDFC_TF:$IMAGE_TAG_NDFC_TF    

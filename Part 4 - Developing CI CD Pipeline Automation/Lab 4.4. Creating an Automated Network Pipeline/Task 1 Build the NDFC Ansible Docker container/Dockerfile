@@ -14,9 +14,8 @@ RUN . /root/ansible/bin/activate && \
     pip install requests-toolbelt && \
     pip install urllib3 && \
     pip install ansible && \
-    pip install dnacentersdk && \
     pip install pyats[full] && \ 
     pip install ansible-lint && \ 
-    ansible-galaxy collection install cisco.dnac
+    ansible-galaxy collection install cisco.dcnm
 COPY ./SDN_CA.crt /usr/local/share/ca-certificates/
 RUN update-ca-certificates
