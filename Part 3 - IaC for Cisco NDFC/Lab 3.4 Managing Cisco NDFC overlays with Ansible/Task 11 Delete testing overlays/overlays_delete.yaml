@@ -1,0 +1,25 @@
+- name: Delete NDFC Overlays from all fabrics
+  hosts: podX-ndfc.sdn.lab
+  gather_facts: False
+  vars:
+    pod: 5
+  vars_files:
+    - fabric_config.yaml
+    - overlay_config.yaml
+
+  tasks:
+  - name: Display all fabrics
+    ansible.builtin.debug:
+      msg: "{{ overlays.keys() }}"
+
+  - name: Delete all the networks in all fabrics
+    cisco.dcnm.dcnm_network:
+      fabric: "{{ item }}"
+      state: deleted
+    loop: "{{ overlays.keys() }}"  
+
+  - name: Delete all the VRFs in all fabrics
+    cisco.dcnm.dcnm_vrf:
+      fabric: "{{ item }}"
+      state: deleted
+    loop: "{{ overlays.keys() }}"    
