@@ -1,0 +1,11 @@
+ndfc:
+   hosts:
+    #podX-ndfc.sdn.lab:
+    ndfc_host:
+      ansible_host: "{{ lookup('env', 'NDFC_HOST') }}"
+      ansible_connection: ansible.netcommon.httpapi
+      ansible_user: "{{ lookup('env', 'NDFC_USER') }}"
+      ansible_password: "{{ lookup('env', 'NDFC_PASSWORD') }}"
+      ansible_network_os: cisco.dcnm.dcnm
+      ansible_httpapi_use_ssl: true
+      ansible_httpapi_validate_certs: false

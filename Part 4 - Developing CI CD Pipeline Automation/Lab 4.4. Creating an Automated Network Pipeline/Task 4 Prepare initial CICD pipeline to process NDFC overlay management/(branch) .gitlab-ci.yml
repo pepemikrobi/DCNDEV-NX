@@ -1,9 +1,3 @@
-variables:
-  IMAGE_NAME_DNAC: $CI_REGISTRY_IMAGE/dnac  
-  IMAGE_NAME_ACI: $CI_REGISTRY_IMAGE/aci
-  IMAGE_TAG_DNAC: "1.0"
-  IMAGE_TAG_ACI: "1.0"
-
 # Here a .gitlab-ci.yml file from the main branch is included
 # It provides build_image and push_image jobs in the build stage
 include:
@@ -11,49 +5,32 @@ include:
     ref: main
     file: .gitlab-ci.yml
 
-# Here an object cache is created to store .terraform sub-folder contents
-# between container runs. With that, Terraform initialization 
-# and the providers and modules downloaded will be persistent between runs
-# In this case the cache is stored locally in the runnner where
-# the container was executed
-.dependencies_cache:
-  cache:
-    key: TF_NETASCODE
-    paths:
-      - "TF_NETASCODE/.terraform"
-    policy: pull
-
-# A new validate stage has been added
+# Stages list
 stages:
   - build
-  - validate
+  - check
 
-# The tf_validate job in validate stage is used to check the HCL syntax
-tf_validate:
-  stage: validate
+# The syntax_check job in the check stage is used to verify the YAML syntax
+syntax_check:
+  stage: check
   # The Docker image is required, the tag selects the docker runner
   # and the Docker image name is also provided
   needs:
     - push_image
   tags:
     - docker
-  image: $IMAGE_NAME_ACI:$IMAGE_TAG_ACI
-  # Here the reference to the cache is used
-  extends: .dependencies_cache
-  cache:
-    policy: pull-push
-  # Before the main script starts a Terraform initialization is performed
+  image: $IMAGE_NAME_NDFC_ANSIBLE:$IMAGE_TAG_NDFC_ANSIBLE
+  # Before main script starts, a Python virtual environment initialization is performed
   before_script:
     - echo $CI_PIPELINE_SOURCE
     - echo $CI_COMMIT_BRANCH
-    - cd TF_NETASCODE
+    - cd Ansible_NDFC_CICD
     - pwd
-    - chmod +x .init.sh
-    - ./.init.sh
-  # The main script here just invokes terraform validate
+    - source /root/ansible/bin/activate
+  # The main script here just invokes the playbook with syntax-check option
   script:
-    - terraform validate
+    - ansible-playbook -i ./inventory.yaml overlay_automation.yaml --syntax-check
   # The job should only start when the pipeline trigger is push
-  # and the branch where commit was performed matches the regex
+  # and the branch where commit was performed matches the regex (the name starts with 'feature')
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^feature.*/
