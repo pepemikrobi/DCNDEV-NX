@@ -36,8 +36,8 @@ syntax_check:
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^feature.*/
 
-# The check job in dry_run stage is used to perform Anible --check operation
-check:
+# The ansible_check job in dry_run stage is used to perform Anible --check operation
+ansible_check:
   stage: dry_run
   # The Docker image is required, the tag selects the docker runner
   # and the Docker image name is also provided
