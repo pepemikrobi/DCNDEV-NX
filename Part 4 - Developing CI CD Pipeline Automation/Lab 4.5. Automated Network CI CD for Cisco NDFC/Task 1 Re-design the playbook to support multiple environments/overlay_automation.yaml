@@ -1,0 +1,14 @@
+- name: Managing NDFC Overlays is simple with Ansible
+  hosts: ndfc_host
+  gather_facts: False
+  vars:
+    pod: X
+  vars_files:
+    - fabric_config.yaml
+    - overlay_config.yaml
+
+  roles:
+    - create_vrfs
+   #- create_networks
+
+

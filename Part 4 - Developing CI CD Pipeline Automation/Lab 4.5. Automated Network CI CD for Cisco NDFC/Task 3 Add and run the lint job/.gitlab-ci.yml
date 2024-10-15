@@ -1,0 +1,124 @@
+variables:
+  IMAGE_NAME_NDFC_ANSIBLE: $CI_REGISTRY_IMAGE/ndfc_ansible
+  IMAGE_NAME_NDFC_TF: $CI_REGISTRY_IMAGE/ndfc_terraform
+  IMAGE_TAG_NDFC_ANSIBLE: "1.0"
+  IMAGE_TAG_NDFC_TF: "1.0"  
+
+# Here a .gitlab-ci-build-images.yml file is included
+# where there's build_image and push_image jobs in the build stage
+include:
+  - project: $CI_PROJECT_PATH
+    file: .gitlab-ci-build-images.yml
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_MESSAGE == "Update .gitlab-ci.yml file"
+      when: never
+    - when: always
+
+stages:
+  - build
+  - check
+  - dry_run
+
+# The syntax_check job in the check stage is used to verify the YAML syntax
+syntax_check:
+  stage: check
+  # The Docker image is required, the tag selects the docker runner
+  # and the Docker image name is also provided
+  needs:
+    - push_image
+  tags:
+    - docker
+  image: $IMAGE_NAME_NDFC_ANSIBLE:$IMAGE_TAG_NDFC_ANSIBLE
+  # Before main script starts, a Python virtual environment initialization is performed
+  before_script:
+    - echo $CI_PIPELINE_SOURCE
+    - echo $CI_COMMIT_BRANCH
+    - cd Ansible_NDFC_CICD
+    - pwd
+    - source /root/ansible/bin/activate
+  # The main script here just invokes the playbook with syntax-check option
+  script:
+    - ansible-playbook -i ./inventory.yaml overlay_automation.yaml --syntax-check
+  # The job should only start when the pipeline trigger is push
+  # and the branch where commit was performed matches the regex (the name starts with 'feature')
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^feature.*/
+
+# The lint job in the check stage is used YAML coding style
+lint:
+  stage: check
+  # The Docker image is required, the tag selects the docker runner
+  # and the Docker image name is also provided
+  needs:
+    - push_image
+  tags:
+    - docker
+  image: $IMAGE_NAME_NDFC_ANSIBLE:$IMAGE_TAG_NDFC_ANSIBLE
+  # Generate artifacts based on lint log file
+  artifacts:
+    paths:
+      - "${CI_BUILDS_DIR}/${CI_PROJECT_PATH}/lint.log"
+    name: lint.log
+    untracked: false
+    when: on_failure
+    expire_in: 30 days
+  # Before main script starts, a Python virtual environment initialization is performed
+  before_script:
+    - echo $CI_PIPELINE_SOURCE
+    - echo $CI_COMMIT_BRANCH
+    - cd Ansible_NDFC_CICD
+    - pwd
+    - source /root/ansible/bin/activate
+  # The main script here just invokes the playbook with syntax-check option
+  script:
+    - ansible-lint -x 'var-naming' --exclude 'ndfc_test.yaml' \
+                    --exclude 'fabric_automation.yaml' \
+                    --exclude 'manage_fabrics.yaml' \
+                    --exclude 'roles/create_fabrics/*' \
+                    --exclude 'roles/onboard_switches/*' \
+                    --exclude 'roles/pause/*' \
+                    --exclude '*/.travis.yml' \
+                    --exclude 'roles/*/.travis.yml' \
+                    --exclude 'roles/*/tests/*' \
+                    --exclude 'roles/*/meta/*' \
+                    --exclude '*config.yaml' | tee "${CI_BUILDS_DIR}/${CI_PROJECT_PATH}/lint.log"
+
+
+# The ansible_check job in dry_run stage is used to perform Anible --check operation
+ansible_check:
+  stage: dry_run
+  # The Docker image is required, the tag selects the docker runner
+  # and the Docker image name is also provided
+  needs:
+    - push_image
+  tags:
+    - docker
+  image: $IMAGE_NAME_NDFC_ANSIBLE:$IMAGE_TAG_NDFC_ANSIBLE
+  # Generate artifacts based on Ansible log file
+  artifacts:
+    paths:
+      - "${CI_BUILDS_DIR}/${CI_PROJECT_PATH}/ansible_check.log"
+    untracked: false
+    when: always
+    expire_in: 30 days
+  # Before main script starts, a Python virtual environment initialization is performed
+  # and the shell variables are set based on GitLab variables
+  before_script:
+    - echo $CI_PIPELINE_SOURCE
+    - echo $CI_COMMIT_BRANCH
+    - cd Ansible_NDFC_CICD
+    - pwd
+    - source /root/ansible/bin/activate
+    - export NDFC_HOST=${NDFC_HOST}
+    - export NDFC_USER=${NDFC_USER}
+    - export NDFC_PASSWORD=${NDFC_PASSWORD}
+    - export ANSIBLE_LOG_PATH=${CI_BUILDS_DIR}/${CI_PROJECT_PATH}/ansible_check.log
+  # The main script here just invokes the playbook with check option
+  script:
+    - ansible-playbook -i ./inventory.yaml overlay_automation.yaml --check
+  # The job should only start when the pipeline trigger is push
+  # and the branch where commit was performed matches the regex
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^feature.*/
