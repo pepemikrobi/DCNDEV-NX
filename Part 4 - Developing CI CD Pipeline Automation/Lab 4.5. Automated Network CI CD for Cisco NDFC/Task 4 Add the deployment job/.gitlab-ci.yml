@@ -3,6 +3,10 @@ variables:
   IMAGE_NAME_NDFC_TF: $CI_REGISTRY_IMAGE/ndfc_terraform
   IMAGE_TAG_NDFC_ANSIBLE: "1.0"
   IMAGE_TAG_NDFC_TF: "1.0"  
+  # The DEPLOYMENT_ENVIRONMENT variable is used to set the deployment environment
+  # based on the branch where the commit was performed
+  # The default setting is NONE which needs be overridden by the workflow rules
+  DEPLOYMENT_ENVIRONMENT: "NONE"
 
 # Here a .gitlab-ci-build-images.yml file is included
 # where there's build_image and push_image jobs in the build stage
@@ -14,12 +18,20 @@ workflow:
   rules:
     - if: $CI_COMMIT_MESSAGE == "Update .gitlab-ci.yml file"
       when: never
+    - if: $CI_COMMIT_BRANCH == "staging" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "staging"
+      variables:
+        DEPLOYMENT_ENVIRONMENT: "DC1 Staging"
+    - if: $CI_COMMIT_BRANCH == "production" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "production"
+      variables:
+        DEPLOYMENT_ENVIRONMENT: "DC2 Production"
+
     - when: always
 
 stages:
   - build
   - check
   - dry_run
+  - apply
 
 # The syntax_check job in the check stage is used to verify the YAML syntax
 syntax_check:
@@ -122,3 +134,41 @@ ansible_check:
   # and the branch where commit was performed matches the regex
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^feature.*/
+
+# This is actual Ansible deployment job, done in a DC set by NDFC_DC from the DEPLOYMENT_ENVIRONMENT variable
+deploy:
+  stage: apply
+  # The Docker image is required, the tag selects the docker runner
+  # and the Docker image name is also provided
+  needs:
+    - push_image
+  tags:
+    - docker
+  image: $IMAGE_NAME_NDFC_ANSIBLE:$IMAGE_TAG_NDFC_ANSIBLE
+  environment:
+    name: $DEPLOYMENT_ENVIRONMENT
+  # Generate artifacts based on Ansible log file in case of failure
+  artifacts:
+    paths:
+      - "${CI_BUILDS_DIR}/${CI_PROJECT_PATH}/ansible_deploy.log"
+    untracked: false
+    when: on_failure
+    expire_in: 30 days
+  # Before main script starts, a Python virtual environment initialization is performed
+  # and the shell variables are set based on GitLab variables
+  before_script:
+    - echo $CI_PIPELINE_SOURCE
+    - echo $CI_COMMIT_BRANCH
+    - cd Ansible_NDFC_CICD
+    - pwd
+    - source /root/ansible/bin/activate
+    - export NDFC_HOST=${NDFC_HOST}
+    - export NDFC_USER=${NDFC_USER}
+    - export NDFC_PASSWORD=${NDFC_PASSWORD}
+    - export NDFC_DC=${DEPLOYMENT_ENVIRONMENT}
+    - export ANSIBLE_LOG_PATH=${CI_BUILDS_DIR}/${CI_PROJECT_PATH}/ansible_deploy.log
+  # The main script here just invokes the playbook with check option
+  script:
+    - ansible-playbook -i ./inventory.yaml overlay_automation.yaml
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "staging" || $CI_COMMIT_BRANCH == "production"
