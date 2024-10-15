@@ -1,0 +1,31 @@
+{% for network in networks_config[fabric_index].keys() %}
+- net_name: {{ networks_config[fabric_index][network].network_name }}
+{% if networks_config[fabric_index][network].net_id is defined %}
+  net_id: {{ networks_config[fabric_index][network].net_id }}
+{% endif %}
+{% if networks_config[fabric_index][network].is_l2only is defined %}
+  is_l2only: {{ networks_config[fabric_index][network].is_l2only }}
+{% endif %}
+{% if networks_config[fabric_index][network].vrf_name is defined %}
+  vrf_name: {{ networks_config[fabric_index][network].vrf_name }}
+{% endif %}
+{% if networks_config[fabric_index][network].gw_ip_subnet is defined %}
+  gw_ip_subnet: {{ networks_config[fabric_index][network].gw_ip_subnet }}
+{% endif %}
+{% if networks_config[fabric_index][network].deploy is defined %}
+  deploy: {{ networks_config[fabric_index][network].deploy }}
+{% endif %}
+{% if networks_config[fabric_index][network].attach is defined %}
+  attach:
+{% for switch in networks_config[fabric_index][network].attach %}
+  - ip_address: {{ fabrics[fabric_name].inventory[switch.switch[:-1] + fabric_name[-1] + switch.switch[-1]].seed_ip }}
+{% if switch.ports[0] != 'none' %}
+    ports: {{ switch.ports }}
+{% else %}
+    ports: []
+{% endif %}
+{% endfor %}
+{% else %}
+  attach: []
+{% endif %}
+{% endfor %}

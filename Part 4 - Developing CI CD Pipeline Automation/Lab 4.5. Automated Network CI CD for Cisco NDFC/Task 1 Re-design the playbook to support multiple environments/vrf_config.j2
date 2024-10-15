@@ -1,0 +1,13 @@
+{% for vrf in vrf_config[fabric_index].keys() %}
+- vrf_name: {{ vrf_config[fabric_index][vrf].vrf_name }}
+{% if vrf_config[fabric_index][vrf].vrf_id is defined %}
+  vrf_id: {{ vrf_config[fabric_index][vrf].vrf_id }}
+{% endif %}
+{% if vrf_config[fabric_index][vrf].attach is defined %}
+  attach:
+{% for switch in vrf_config[fabric_index][vrf].attach %}
+    - ip_address: {{ fabrics[fabric_name].inventory[switch[:-1] + fabric_name[-1] + switch[-1]].seed_ip }}
+{% endfor %}
+{% endif %}
+
+{% endfor %}
