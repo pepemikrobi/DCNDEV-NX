@@ -1,0 +1,43 @@
+# This is pyATS testing done using topology file chosen by the DEPLOYMENT_ENVIRONMENT variable
+test:
+  stage: apply
+  # The Docker image is required, the tag selects the docker runner
+  # and the Docker image name is also provided
+  needs:
+    - push_image
+  tags:
+    - docker
+  image: $IMAGE_NAME_NDFC_ANSIBLE:$IMAGE_TAG_NDFC_ANSIBLE
+  environment:
+    name: $DEPLOYMENT_ENVIRONMENT
+  # Generate artifacts based on Ansible log file in case of failure
+  artifacts:
+    paths:
+      - "${CI_BUILDS_DIR}/${CI_PROJECT_PATH}/CD_Tests/results/*"
+    untracked: true
+    when: always
+    expire_in: 30 days
+  # Before main script starts, a Python virtual environment initialization is performed
+  # and the shell variables are set based on GitLab variables
+  before_script:
+    - echo $CI_PIPELINE_SOURCE
+    - echo $CI_COMMIT_BRANCH
+    - cd Ansible_NDFC_CICD
+    - pwd
+    - source /root/ansible/bin/activate
+    - export NDFC_HOST=${NDFC_HOST}
+    - export NDFC_USER=${NDFC_USER}
+    - export NDFC_PASSWORD=${NDFC_PASSWORD}
+    - export NDFC_DC=${NDFC_DC}
+    - if [ "$DEPLOYMENT_ENVIRONMENT" == "DC1 Staging" ]; then export TEST_ENVIRONMENT="staging_env.yaml"; \
+      elseif [ "$DEPLOYMENT_ENVIRONMENT" == "DC2 Production" ] ; then export TEST_ENVIRONMENT="production_env.yaml"; 
+      else export TEST_ENVIRONMENT="NULL"; fi
+  # The main script here just invokes the playbook with check option
+  script:
+    - pyats run job ./run_tests.py -t $TEST_ENVIRONMENT --archive-dir=${PWD}/results --no-archive-subdir --no-mail
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "staging" 
+      when: always
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "production" && $CI_COMMIT_TAG =~ /.*/
+      when: always
+

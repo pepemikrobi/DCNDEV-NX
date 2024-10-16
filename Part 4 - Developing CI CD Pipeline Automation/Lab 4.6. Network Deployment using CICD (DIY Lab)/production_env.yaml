@@ -1,0 +1,58 @@
+testbed:
+    credentials:
+        default:
+            username: "admin"
+            password: "AdminXsisko$"
+
+devices:
+    POD5_LEAF21:
+        alias: "leaf1"
+        type: "switch"
+        os: "nxos"
+        platform: "nxosv"
+        connections:
+            cli:
+                protocol: "ssh"
+                ip: "10.11.20X.221"
+
+    POD5_LEAF22:
+        alias: "leaf2"
+        type: "switch"
+        os: "nxos"
+        platform: "nxosv"
+        connections:
+            cli:
+                protocol: "ssh"
+                ip: "10.11.20X.222"
+
+    POD5_SRV3:
+        alias: "server1"
+        type: "server"
+        os: "linux"
+        platform: "ubuntu"
+        credentials:
+            default:
+                username: "podX"
+                password: "AdminXsisko$"                
+        connections:
+            cli:
+                protocol: "ssh"
+                ip: "10.11.10X.3"
+        custom:
+            fabric_ip: "10.1X.191.3"
+
+    POD5_SRV4:
+        alias: "server2"
+        type: "server"
+        os: "linux"
+        platform: "ubuntu"
+        credentials:
+            default:
+                username: "podX"
+                password: "AdminXsisko$"                
+        connections:
+            cli:
+                protocol: "ssh"
+                ip: "10.11.10X.4"
+        custom:
+            fabric_ip: "10.1X.191.4"

@@ -1,0 +1,38 @@
+overlays:
+  # DC1:
+  "{{ lookup('env', 'NDFC_DC') }}":
+    vrfs:
+      VRF_A:
+        vrf_name: VRF_A
+        vrf_id: 50011
+        attach:
+          - LEAF1
+          - LEAF2
+      VRF_B:
+        vrf_name: VRF_B
+        attach:
+          - LEAF1
+
+    networks:
+      NET11:
+        network_name: NET11
+        network_id: 30011
+        vrf_name: VRF_A
+        gw_ip_subnet: "10.1{{ pod }}.191.254/24"
+        deploy: False
+        attach:
+          - switch: LEAF1
+            ports: 
+            - Ethernet1/3          
+          - switch: LEAF2
+            ports: 
+            - Ethernet1/3          
+      NET12:
+        network_name: NET12
+        network_id: 30012
+        is_l2only: True
+        deploy: False
+        attach:
+          - switch: LEAF1
+            ports: 
+            - none   
