@@ -22,9 +22,9 @@ resource "dcnm_network" "network_2" {
 
 resource "dcnm_network" "network_3" {
     fabric_name     = "DC1"
-    name            = "Network31"
+    name            = "Network3"
     network_id      = "1003"
-    display_name    = "Network31"
+    display_name    = "Network3"
     description     = "The third network from terraform"
     l2_only_flag    = true
     ir_enable_flag  = true    
