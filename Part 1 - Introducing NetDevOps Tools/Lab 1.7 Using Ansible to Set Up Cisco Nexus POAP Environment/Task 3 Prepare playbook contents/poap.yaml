@@ -1,7 +1,7 @@
 ---
 - name: Setup POAP environment
   hosts: all
-  remote_user: pod5
+  remote_user: podX
   become: true
   gather_facts: false
   tasks:
