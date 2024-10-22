@@ -106,10 +106,12 @@ portgroup_data = {
     "2X04" = "PODX_SPINE12_SPINE22"
 
     # SRV connections
-    "2X31" = "PODX_SRV1_LEAF11"
-    "2X32" = "PODX_SRV2_LEAF12"
-    "2X41" = "PODX_SRV3_LEAF21"
-    "2X42" = "PODX_SRV4_LEAF22"    
+    # Fabric server connections have been already defined during server creation
+    # Do not uncomment these four 
+    # "2X31" = "PODX_SRV1_LEAF11"
+    # "2X32" = "PODX_SRV2_LEAF12"
+    # "2X41" = "PODX_SRV3_LEAF21"
+    # "2X42" = "PODX_SRV4_LEAF22"    
     "2X33" = "PODX_LEAF11_UNUSED"
     "2X34" = "PODX_LEAF12_UNUSED"
     "2X43" = "PODX_LEAF21_UNUSED"
