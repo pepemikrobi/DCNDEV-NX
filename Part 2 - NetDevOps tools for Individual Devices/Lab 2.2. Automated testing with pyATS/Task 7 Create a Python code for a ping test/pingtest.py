@@ -25,7 +25,7 @@ class PingTest (aetest.Testcase):
         # for dest in destinations:
         #     with steps.start(f"Ping from {device.hostname} to {dest}", continue_=True) as step:
         #         try:
-        #             device.ping (dest)
+        #             device.ping (dest, vrf='management')
         #         except:
         #             step.failed (f"Ping from {device.hostname} to {dest} failed")
         #         else:
