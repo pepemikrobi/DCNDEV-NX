@@ -38,11 +38,11 @@ resource "vsphere_host_port_group" "srv12" {
 
 resource "vsphere_host_port_group" "srv1" {
 
-    name                = format("(1%s31) POD%s_SRV1_LEAF11", var.pod, var.pod)
+    name                = format("(2%s31) POD%s_SRV1_LEAF11", var.pod, var.pod)
     host_system_id      = data.vsphere_host.esxi_host.id
     virtual_switch_name = "vSwitch0"
 
-    vlan_id = format("1%s31", var.pod)
+    vlan_id = format("2%s31", var.pod)
     allow_promiscuous = true
     allow_forged_transmits = true
     allow_mac_changes = true
