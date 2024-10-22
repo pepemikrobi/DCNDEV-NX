@@ -1,0 +1,82 @@
+all:
+  vars:
+    ansible_network_os: cisco.nxos.nxos
+    ansible_user: admin
+    ansible_password: AdminXsisko$
+
+  hosts:
+
+    "10.11.10X.111":
+      loopbacks:
+      - name: Loopback1000
+        ip_address: "100.0.1.111/32"
+      - name: Loopback1001
+        ip_address: "100.1.1.111/32"        
+    "10.11.10X.112":
+      loopbacks:
+      - name: Loopback1000
+        ip_address: "100.0.1.112/32"
+      - name: Loopback1001
+        ip_address: "100.1.1.112/32"         
+    "10.11.10X.113":
+      loopbacks:
+      - name: Loopback1000
+        ip_address: "100.0.1.113/32"
+      - name: Loopback1001
+        ip_address: "100.1.1.113/32"         
+    "10.11.10X.114":
+      loopbacks:
+      - name: Loopback1000
+        ip_address: "100.0.1.114/32"  
+      - name: Loopback1001
+        ip_address: "100.1.1.114/32"  
+
+    "10.11.20X.221":
+      loopbacks:
+      - name: Loopback1000
+        ip_address: "100.0.1.221/32"
+      - name: Loopback1001
+        ip_address: "100.1.1.221/32"        
+    "10.11.20X.222":
+      loopbacks:
+      - name: Loopback1000
+        ip_address: "100.0.1.222/32"
+      - name: Loopback1001
+        ip_address: "100.1.1.222/32"         
+    "10.11.20X.223":
+      loopbacks:
+      - name: Loopback1000
+        ip_address: "100.0.1.223/32"
+      - name: Loopback1001
+        ip_address: "100.1.1.223/32"         
+    "10.11.20X.224":
+      loopbacks:
+      - name: Loopback1000
+        ip_address: "100.0.1.224/32"  
+      - name: Loopback1001
+        ip_address: "100.1.1.224/32" 
+        
+  children:
+    leaves:
+      hosts:
+        "10.11.10X.111":
+        "10.11.10X.112":   
+          
+    spines:
+      hosts:
+        "10.11.10X.113":
+        "10.11.10X.114":   
+
+    dc1:
+      hosts:
+        "10.11.10X.111":
+        "10.11.10X.112": 
+        "10.11.10X.113":
+        "10.11.10X.114":
+        
+    dc2:    
+      hosts:
+        "10.11.20X.221":
+        "10.11.20X.222":
+        "10.11.20X.223":
+        "10.11.20X.224":

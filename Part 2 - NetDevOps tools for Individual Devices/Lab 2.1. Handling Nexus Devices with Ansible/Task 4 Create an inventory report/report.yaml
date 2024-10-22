@@ -1,0 +1,27 @@
+---
+- name: "A playbook to generate a network inventory report"
+  hosts: all
+  connection: network_cli
+  tasks:
+
+    - name: Gather NXOS facts
+      cisco.nxos.nxos_facts:
+        gather_subset: 
+          - interfaces
+      register: facts
+
+    - name: "Display all host variables"
+      debug:
+        var: facts
+
+    - name: "Create reports folder"
+      file:
+        path: "./reports"
+        state: "directory"
+      delegate_to: localhost
+
+    - name: "Generate a report"
+      template:
+        src: "report.j2"
+        dest: "reports/{{ inventory_hostname }}.txt"
+      delegate_to: localhost

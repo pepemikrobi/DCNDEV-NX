@@ -1,0 +1,30 @@
+all:
+  vars:
+    ansible_network_os: cisco.nxos.nxos
+    ansible_user: admin
+    ansible_password: AdminXsisko$
+
+  children:
+    leaves:
+      hosts:
+        "10.11.10X.111":
+        "10.11.10X.112":   
+          
+    spines:
+      hosts:
+        "10.11.10X.113":
+        "10.11.10X.114":   
+
+    dc1:
+      hosts:
+        "10.11.10X.111":
+        "10.11.10X.112": 
+        "10.11.10X.113":
+        "10.11.10X.114":
+        
+    dc2:    
+      hosts:
+        "10.11.20X.221":
+        "10.11.20X.222":
+        "10.11.20X.223":
+        "10.11.20X.224":
