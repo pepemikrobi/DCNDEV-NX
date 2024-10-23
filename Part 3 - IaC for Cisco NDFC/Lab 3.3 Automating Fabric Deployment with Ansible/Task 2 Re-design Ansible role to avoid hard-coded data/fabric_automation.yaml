@@ -2,7 +2,7 @@
   hosts: podX-ndfc.sdn.lab
   gather_facts: False
     vars_files:
-    - fabric_config.yaml
+    - fabric_data.yaml
 
   roles:
     - create_fabrics
