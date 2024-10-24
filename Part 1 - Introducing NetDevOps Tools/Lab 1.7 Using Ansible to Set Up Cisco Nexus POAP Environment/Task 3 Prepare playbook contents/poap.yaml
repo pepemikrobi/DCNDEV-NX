@@ -48,7 +48,7 @@
       dest: "/tftpboot"
       state: link
 
-  - name: Copy POAP script to TFTP folder
+  - name: Copy POAP script to TFTP directory
     template:
       src=poap_nexus_script.j2
       dest=/tftpboot/poap_nexus_script.py
