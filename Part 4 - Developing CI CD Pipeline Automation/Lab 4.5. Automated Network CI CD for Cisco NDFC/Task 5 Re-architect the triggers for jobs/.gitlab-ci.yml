@@ -134,7 +134,8 @@ ansible_check:
     - export NDFC_HOST=${NDFC_HOST}
     - export NDFC_USER=${NDFC_USER}
     - export NDFC_PASSWORD=${NDFC_PASSWORD}
-    - export NDFC_DC=${DEPLOYMENT_ENVIRONMENT}        
+    # The NDFC_DC variable is set based on the first three chars of DEPLOYMENT_ENVIRONMENT variable ('DC1' or 'DC2')
+    - export NDFC_DC=$(echo ${DEPLOYMENT_ENVIRONMENT} | cut -c1-3)
     - export ANSIBLE_LOG_PATH=${CI_BUILDS_DIR}/${CI_PROJECT_PATH}/ansible_check.log
   # The main script here just invokes the playbook with check option
   script:
@@ -175,7 +176,8 @@ deploy:
     - export NDFC_HOST=${NDFC_HOST}
     - export NDFC_USER=${NDFC_USER}
     - export NDFC_PASSWORD=${NDFC_PASSWORD}
-    - export NDFC_DC=${DEPLOYMENT_ENVIRONMENT}
+    # The NDFC_DC variable is set based on the first three chars of DEPLOYMENT_ENVIRONMENT variable ('DC1' or 'DC2')
+    - export NDFC_DC=$(echo ${DEPLOYMENT_ENVIRONMENT} | cut -c1-3)
     - export ANSIBLE_LOG_PATH=${CI_BUILDS_DIR}/${CI_PROJECT_PATH}/ansible_deploy.log
   # The main script here just invokes the playbook with check option
   script:
