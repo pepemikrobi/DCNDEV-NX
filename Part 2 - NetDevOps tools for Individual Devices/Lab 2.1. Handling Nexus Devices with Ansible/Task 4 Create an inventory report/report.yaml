@@ -14,7 +14,7 @@
       debug:
         var: facts
 
-    - name: "Create reports folder"
+    - name: "Create reports directory"
       file:
         path: "./reports"
         state: "directory"
