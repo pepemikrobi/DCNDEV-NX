@@ -24,6 +24,10 @@ variable "server_data" {
     }))
 }
 
+variable "portgroup_data" {
+  type = map(string)
+}
+
 variable "server_fabric_data" {
     type = map(object({
     name = string

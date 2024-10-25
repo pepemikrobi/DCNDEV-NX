@@ -5,23 +5,6 @@ data "vsphere_virtual_machine" "template" {
   datacenter_id = data.vsphere_datacenter.datacenter.id
 }
 
-data "vsphere_network" "dc1_net_mgmt" {
-  name          = format("(11%02s) SDN_POD%s_DC1", var.pod, var.pod)
-  datacenter_id = data.vsphere_datacenter.datacenter.id
-}
-
-data "vsphere_network" "dc2_net_mgmt" {
-  name          = format("(12%02s) SDN_POD%s_DC2", var.pod, var.pod)
-  datacenter_id = data.vsphere_datacenter.datacenter.id
-}
-
-data "vsphere_network" "ports" {
-  for_each = var.portgroup_data
-
-  name = vsphere_host_port_group.pod_portgroups[each.key].name
-  datacenter_id = data.vsphere_datacenter.datacenter.id
-}
-
 # DC1
 
 resource "vsphere_virtual_machine" "dc1_nexus" {
@@ -56,7 +39,7 @@ resource "vsphere_virtual_machine" "dc1_nexus" {
 
   # mgmt0
   network_interface {
-    network_id   = data.vsphere_network.dc1_net_mgmt.id
+    network_id   = data.vsphere_network.dc1_oob_mgmt.id
     adapter_type = data.vsphere_virtual_machine.template.network_interface_types[0]
     use_static_mac = true
     mac_address  = format("02:ca:fe:0%s:%s:09", var.pod, each.value["index"])
@@ -178,7 +161,7 @@ resource "vsphere_virtual_machine" "dc2_nexus" {
 
   # mgmt0
   network_interface {
-    network_id   = data.vsphere_network.dc2_net_mgmt.id
+    network_id   = data.vsphere_network.dc2_oob_mgmt.id
     adapter_type = data.vsphere_virtual_machine.template.network_interface_types[0]
     use_static_mac = true
     mac_address  = format("02:ca:fe:0%s:%s:09", var.pod, each.value["index"])
