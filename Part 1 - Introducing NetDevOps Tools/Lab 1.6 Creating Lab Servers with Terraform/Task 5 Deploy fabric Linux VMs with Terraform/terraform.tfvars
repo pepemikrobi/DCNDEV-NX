@@ -19,8 +19,15 @@ server_data = {
     }
 }
 
-server_fabric_data = {
+portgroup_data = {
+    # Farbic server connections
+    "2X31" = "PODX_SRV1_LEAF11"
+    "2X32" = "PODX_SRV2_LEAF12"
+    "2X41" = "PODX_SRV3_LEAF21"
+    "2X42" = "PODX_SRV4_LEAF22"   
+}
 
+server_fabric_data = {
     SRV1 = {
         name = "podX-srv1"
         index = 1

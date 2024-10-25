@@ -5,7 +5,7 @@
   gather_facts: no
   tasks:
 
-    - name: "Create backup folder"
+    - name: "Create backup directory"
       file:
         path: "./backups"
         state: "directory"

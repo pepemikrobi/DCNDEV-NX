@@ -3,15 +3,6 @@ data "vsphere_virtual_machine" "server_fabric_template" {
     datacenter_id = data.vsphere_datacenter.datacenter.id
 }
 
-locals {
-    fabric_interface_srv_fabric = { 
-        srv1 = data.vsphere_network.srv1
-        srv2 = data.vsphere_network.srv2
-        srv3 = data.vsphere_network.srv3
-        srv4 = data.vsphere_network.srv4        
-    }
-}
-
 resource "vsphere_virtual_machine" "server_fabric" {
 
     for_each = var.server_fabric_data
@@ -26,7 +17,7 @@ resource "vsphere_virtual_machine" "server_fabric" {
     memory                     = 2048
     guest_id                   = "ubuntu64Guest"
     boot_delay                 = 2000
-
+    
     clone {
         template_uuid = "${data.vsphere_virtual_machine.server_fabric_template.id}"
         customize {
@@ -56,7 +47,7 @@ resource "vsphere_virtual_machine" "server_fabric" {
 
     # ens160
     network_interface {
-        network_id   = data.vsphere_network.oob_mgmt.id
+        network_id   = data.vsphere_network.dc1_oob_mgmt.id
         adapter_type = data.vsphere_virtual_machine.server_fabric_template.network_interface_types[0]
         use_static_mac = true
         mac_address  = format("02:ca:fe:0%s:%02s:00", var.pod, each.value["index"])
@@ -64,7 +55,7 @@ resource "vsphere_virtual_machine" "server_fabric" {
 
     # ens224
     network_interface {
-        network_id   = local.fabric_interface_srv_fabric[each.value["ens224"]].id
+        network_id   = data.vsphere_network.ports[each.value["ens224"]].id
         adapter_type = data.vsphere_virtual_machine.server_fabric_template.network_interface_types[0]
         use_static_mac = true
         mac_address  = format("02:fa:b0:0%s:%02s:00", var.pod, each.value["index"])
@@ -87,4 +78,3 @@ resource "vsphere_virtual_machine" "server_fabric" {
     }
 
 }
-
