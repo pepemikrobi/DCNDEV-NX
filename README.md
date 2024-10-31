@@ -33,7 +33,6 @@ Part 2. NetDevOps tools for Individual Devices
 ---
 - Lab 2.1. Handling Nexus Devices with Ansible
 - Lab 2.2. Automated Testing with pyATS
-- Lab 2.3. Utilizing Cisco Nexus Streaming Telemetry
 
 Part 3. Infrastructure-as-Code for Cisco NDFC
 ---
@@ -49,4 +48,4 @@ Part 4. Developing CI/CD Pipeline Automation
 - Lab 4.3. Starting with a Simple Dummy Pipeline
 - Lab 4.4. Creating an Automated Network Pipeline
 - Lab 4.5. Automated Network CI/CD for Cisco NDFC Fabrics
-
+- Lab 4.6. Network Deployment using CI/CD (DIY Lab)
