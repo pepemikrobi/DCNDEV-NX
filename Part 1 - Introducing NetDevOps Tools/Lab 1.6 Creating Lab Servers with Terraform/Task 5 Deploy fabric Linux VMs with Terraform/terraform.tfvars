@@ -31,24 +31,24 @@ server_fabric_data = {
     SRV1 = {
         name = "podX-srv1"
         index = 1
-        ens224 = "srv1"
+        ens224 = "2X31"
     }
 
     SRV2 = {
         name = "podX-srv2"
         index = 2
-        ens224 = "srv2"
+        ens224 = "2X32"
     }
 
     SRV3 = {
         name = "podX-srv3"
         index = 3
-        ens224 = "srv3" 
+        ens224 = "2X41" 
     }
 
     SRV4 = {
         name = "podX-srv4"
         index = 4
-        ens224 = "srv4"
+        ens224 = "2X42"
     }
 }
