@@ -1,7 +1,7 @@
 - name: Managing NDFC fabrics
   hosts: podX-ndfc.sdn.lab
   gather_facts: False
-    vars_files:
+  vars_files:
     - fabric_config.yaml
 
   roles:
