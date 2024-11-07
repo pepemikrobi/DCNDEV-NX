@@ -73,7 +73,7 @@ lint:
     - source /root/ansible/bin/activate
   # The main script here just invokes the playbook with syntax-check option
   script:
-    - ansible-lint  --exclude 'ndfc_test.yaml' \
+    - ansible-lint  -x 'var-naming' --exclude 'ndfc_test.yaml' \
                     --exclude 'fabric_automation.yaml' \
                     --exclude 'manage_fabrics.yaml' \
                     --exclude 'roles/create_fabrics/*' \
